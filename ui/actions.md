@@ -47,6 +47,12 @@ handling, skipping or re-ordering a task, any workaround for a backend limitatio
 - Alternatives considered: a separate structured `suggestionBlock` field on the chat response — more explicit, but the CLAUDE.md contract in §6 doesn't define one and adding a field not in the assumed contract felt like a bigger deviation than a text convention the UI already has to parse for formatting anyway (line breaks, paragraphs).
 - Review needed: no — but flag to whoever implements the real backend chat endpoint so replies use the same `• ` convention for rewritten bullets, or the contract should be extended with an explicit field.
 
+## [2026-07-13] task-06 — Minimal resume-state lift into BuilderPage to make the preview testable
+- Context: Task 06's acceptance criterion requires feeding progressively fuller resume JSON via a live mock conversation and confirming the preview renders correctly at every stage. `ResumePreview.jsx` is a pure `resume` prop-in component, but something has to supply that prop from the live conversation to actually exercise it end to end.
+- Decision: `BuilderPage.jsx` now holds a single `useState` for `resume` and passes it to `ChatPanel` via the `onResumeUpdate` callback (already built in Task 05) and down to `ResumePreview`. This is intentionally minimal — it does NOT lift chat `messages` state, does not add the signature accent-flash highlight animation, does not handle out-of-order/stale turns, does not wire the navbar completeness pill, and does not do session restore. All of that remains Task 07's job per CLAUDE.md's own scope for that task; this lift only exists so Task 06 can be verified against real data instead of a static fixture.
+- Alternatives considered: feeding `ResumePreview` a hardcoded fixture object for isolated testing, leaving zero wiring for Task 07 to add — rejected because it would ship a visibly disconnected preview panel (violates "no half-finished implementations" — a user opening the app would see chat and preview never talk to each other) for the span of one commit, and Task 07 would just be re-deriving this exact same wiring anyway.
+- Review needed: no.
+
 ---
 
 ## Backend change requests

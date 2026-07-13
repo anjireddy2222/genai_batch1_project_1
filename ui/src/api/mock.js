@@ -118,14 +118,21 @@ function extractDates(text) {
 
 function parseExperienceBasics(text) {
   const { startDate, endDate } = extractDates(text)
-  const cleaned = text.replace(/\b(19|20)\d{2}\b/g, '').replace(/present|current/gi, '').trim()
+  const cleaned = text
+    .replace(/\b(19|20)\d{2}\b/g, '')
+    .replace(/present|current/gi, '')
+    .replace(/\b(to|since|through)\b/gi, '')
+    .replace(/,\s*,/g, ',')
+    .replace(/,\s*$/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
   const separator = /\s+at\s+|\s+@\s+/i
   let title = cleaned
   let company = 'the company'
   if (separator.test(cleaned)) {
     const [titlePart, ...rest] = cleaned.split(separator)
     title = titlePart.trim()
-    company = rest.join(' ').replace(/[,.]$/, '').trim() || company
+    company = rest.join(' ').replace(/,\s*$/, '').trim() || company
   }
   return {
     title: title ? titleCase(title) : 'Your Role',
@@ -141,7 +148,7 @@ function rewriteBullets(text, targetRole) {
   const hasNumber = /\d/.test(cleaned)
   const bullets = [`${first}${hasNumber ? '' : ', improving team output'}.`]
   if (hasNumber) {
-    bullets.push(`Delivered measurable impact by ${cleaned.charAt(0).toLowerCase()}${cleaned.slice(1)}.`)
+    bullets.push(`Recognized for measurable results that directly supported ${targetRole || 'business'} goals.`)
   } else {
     bullets.push(`Collaborated cross-functionally to support ${targetRole || 'team'} priorities.`)
   }
@@ -149,7 +156,8 @@ function rewriteBullets(text, targetRole) {
 }
 
 function parseEducation(text) {
-  const { endDate } = extractDates(text)
+  const years = text.match(/\b(19|20)\d{2}\b/g) || []
+  const endDate = years[years.length - 1] || ''
   const parts = text
     .replace(/\b(19|20)\d{2}\b/g, '')
     .split(',')
