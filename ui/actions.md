@@ -29,6 +29,18 @@ handling, skipping or re-ordering a task, any workaround for a backend limitatio
 - Alternatives considered: separate `/register` route/page — more realistic long-term but pure duplication today with no backend to differentiate behavior, and adds a route this task's scope didn't ask for.
 - Review needed: yes — confirm against real backend whether register is even in scope for this product, or whether the app is invite/single-account only.
 
+## [2026-07-13] task-04 — Mock conversation state persisted in sessionStorage
+- Context: `src/api/mock.js` needs to hold conversation/resume state somewhere so multi-turn chat works. A pure in-memory module variable would reset on every page refresh, making Task 07's "session restore on load" acceptance criterion untestable in mock mode.
+- Decision: mock chat/resume state is persisted to `sessionStorage` (clears when the tab closes, survives refresh); mock auth session persisted to `localStorage` (survives tab close too, mimicking a longer-lived cookie session). Both are pure mock conveniences, isolated in `src/api/mock.js` — the real `src/api/client.js` talks to the backend fresh every time and never touches storage itself.
+- Alternatives considered: pure in-memory (simplest, but breaks session-restore testing on refresh); real IndexedDB (overkill for a mock).
+- Review needed: no.
+
+## [2026-07-13] task-04 — Resume file download mock returns placeholder bytes, not real PDF/DOCX
+- Context: `src/api/mock.js` `downloadResume()` needs to return *something* for the download flow (Task 08) to exercise, but real PDF/DOCX generation is explicitly Task 08's scope.
+- Decision: mock mode returns a tiny text `Blob` with the right MIME type (not a byte-valid PDF/DOCX) as a placeholder. Task 08 will replace this — either with a real mock file, or by moving generation client-side entirely (per its own pre-work decision, since the backend has no file-generation endpoints either — see "Backend change requests" below).
+- Alternatives considered: building a real minimal valid PDF now — deferred to avoid duplicating work Task 08 will redo anyway once it decides the generation strategy.
+- Review needed: no.
+
 ---
 
 ## Backend change requests

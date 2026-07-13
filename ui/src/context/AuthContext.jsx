@@ -1,11 +1,13 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import * as authApi from '../api/auth.js'
+import { setUnauthorizedHandler } from '../api/client.js'
 
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [sessionExpired, setSessionExpired] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -25,6 +27,16 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
+  useEffect(() => {
+    setUnauthorizedHandler(() => {
+      setUser((current) => {
+        if (current) setSessionExpired(true)
+        return null
+      })
+    })
+    return () => setUnauthorizedHandler(null)
+  }, [])
+
   const login = useCallback(async (email, password) => {
     const { user: loggedInUser } = await authApi.login(email, password)
     setUser(loggedInUser)
@@ -36,8 +48,12 @@ export function AuthProvider({ children }) {
     setUser(null)
   }, [])
 
+  const clearSessionExpired = useCallback(() => setSessionExpired(false), [])
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, loading, login, logout, sessionExpired, clearSessionExpired }}>
+      {children}
+    </AuthContext.Provider>
   )
 }
 
