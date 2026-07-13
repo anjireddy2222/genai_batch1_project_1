@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #F7F6F3;
+  --surface: #FFFFFF;
+  --surface-2: #EFEDE8;
+  --primary: #1E3A5F;
+  --primary-contrast: #FFFFFF;
+  --accent: #2D9C8A;
+  --success: #3B8C40;
+  --danger: #C0392B;
+  --text: #1F2328;
+  --text-muted: #5C6570;
+  --border: #E2E0DA;
+}
+
+.dark {
+  --bg: #12161C;
+  --surface: #1C222B;
+  --surface-2: #161B22;
+  --primary: #5B8DC9;
+  --primary-contrast: #0D1420;
+  --accent: #3FBFA8;
+  --success: #4CAF6E;
+  --danger: #E57368;
+  --text: #E4E7EB;
+  --text-muted: #9AA4B2;
+  --border: #2A3340;
+}
+
+* {
+  border-color: var(--border);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+@keyframes accent-flash {
+  0% {
+    background-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.highlight-flash {
+  animation: accent-flash 1.2s ease-out;
+}
