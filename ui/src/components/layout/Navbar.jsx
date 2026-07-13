@@ -2,13 +2,16 @@ import { NavLink } from 'react-router-dom'
 import { IconFileDescription } from '@tabler/icons-react'
 import ThemeToggle from './ThemeToggle.jsx'
 import UserMenu from './UserMenu.jsx'
+import { useResume } from '../../context/ResumeContext.jsx'
 
 const navLinkClass = ({ isActive }) =>
   `rounded-control px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
     isActive ? 'text-text bg-surface-2' : 'text-text-muted hover:text-text hover:bg-surface-2'
   }`
 
-export default function Navbar({ completeness = 0 }) {
+export default function Navbar() {
+  const { completeness } = useResume()
+
   return (
     <header className="h-14 shrink-0 border-b border-border bg-surface dark:bg-surface-2">
       <div className="flex h-full items-center justify-between gap-4 px-4 sm:px-6">

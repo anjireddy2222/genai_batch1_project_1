@@ -4,6 +4,7 @@ import BuilderPage from './pages/BuilderPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import ProtectedRoute from './components/auth/ProtectedRoute.jsx'
+import { ResumeProvider } from './context/ResumeContext.jsx'
 
 export default function App() {
   return (
@@ -12,7 +13,9 @@ export default function App() {
       <Route
         element={
           <ProtectedRoute>
-            <AppLayout />
+            <ResumeProvider>
+              <AppLayout />
+            </ResumeProvider>
           </ProtectedRoute>
         }
       >

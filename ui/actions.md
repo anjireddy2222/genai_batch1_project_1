@@ -53,6 +53,18 @@ handling, skipping or re-ordering a task, any workaround for a backend limitatio
 - Alternatives considered: feeding `ResumePreview` a hardcoded fixture object for isolated testing, leaving zero wiring for Task 07 to add — rejected because it would ship a visibly disconnected preview panel (violates "no half-finished implementations" — a user opening the app would see chat and preview never talk to each other) for the span of one commit, and Task 07 would just be re-deriving this exact same wiring anyway.
 - Review needed: no.
 
+## [2026-07-13] task-07 — React Context (ResumeProvider) instead of BuilderPage-only state
+- Context: CLAUDE.md's task-07 scope explicitly allows "BuilderPage (or a ResumeContext)" for the lifted state. The navbar's completeness pill (in `Navbar.jsx`, rendered by `AppLayout.jsx`) needs the *same* live `completeness` value as `BuilderPage`'s children — but `Navbar` is a sibling of `BuilderPage`'s route content, not a descendant, so state owned only by `BuilderPage` can't reach it without prop drilling through `AppLayout` and the router's `Outlet`.
+- Decision: built `src/context/ResumeContext.jsx` (`ResumeProvider` / `useResume()`) holding `conversationId`, `messages`, `resume`, `completeness`, `changedKeys` (diff result for the highlight animation), `resumeVersion`, `pending`, `restoring`, and `error`. Mounted once in `App.jsx`, wrapping `AppLayout` inside `ProtectedRoute` (so it only exists for authenticated sessions). `Navbar`, `ChatPanel`, and `ResumePreview` all consume it directly via `useResume()` — no prop drilling. `ChatPanel` and `ResumePreview` were refactored from Task 05/06's local-state versions to pull from context instead.
+- Alternatives considered: keep state in `BuilderPage` and prop-drill `completeness` through `AppLayout` → `Navbar` — rejected, since `AppLayout` renders `Navbar` and `<Outlet/>` as siblings with no natural channel for the *route's* state to reach the *layout's* navbar short of a second context anyway.
+- Review needed: no.
+
+## [2026-07-13] task-07 — Signature highlight: section-level diff + key-remount, not a manual class-toggle timer
+- Context: the accent-flash highlight (CLAUDE.md §5 "Signature interaction") needs to restart cleanly every time a section's content changes, including when the same section changes twice in a row — a plain `useState` boolean + `setTimeout` to remove the class would not replay the CSS animation on a second rapid change without extra bookkeeping.
+- Decision: `ResumeContext.applyResumeUpdate` diffs the previous vs. next resume object at section granularity (`header`, `summary`, `experience-{i}`, `education-{i}`, `skills`) into a `changedKeys` Set, and bumps a `resumeVersion` counter on every update. `ResumePreview` gives each section a React `key` that only changes when that specific section is in `changedKeys` for the current version (`{id}-{version}` vs. a stable `id`) — forcing a clean remount (and thus animation restart) exactly when, and only when, that section actually changed. `prefers-reduced-motion` is handled for free by the existing global CSS rule from Task 01 that collapses all animation durations to ~0.
+- Alternatives considered: a `useState` map of `{ [sectionId]: timestamp }` cleared via `setTimeout` per section — works, but is strictly more bookkeeping (needs cleanup on unmount, per-timer tracking) for the same visual result the key-remount trick gets for free from React's own reconciliation.
+- Review needed: no.
+
 ---
 
 ## Backend change requests
