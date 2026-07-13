@@ -3,12 +3,19 @@ import AppLayout from './components/layout/AppLayout.jsx'
 import BuilderPage from './pages/BuilderPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
+import ProtectedRoute from './components/auth/ProtectedRoute.jsx'
 
 export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
-      <Route element={<AppLayout />}>
+      <Route
+        element={
+          <ProtectedRoute>
+            <AppLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route path="/" element={<BuilderPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>

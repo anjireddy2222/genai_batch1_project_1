@@ -7,7 +7,7 @@ Update status + date + summary as part of each task's commit. Work strictly top 
 |---|------|--------|------|----------------|
 | 01 | [Project setup & theme system](tasks/task-01-project-setup.md) | done | 2026-07-13 | Vite+React JS scaffold, Tailwind tokens, light/dark/system theme, no-flash script |
 | 02 | [App shell: navbar, footer, routing](tasks/task-02-app-shell.md) | done | 2026-07-13 | Navbar, footer, AppLayout, BuilderPage split placeholder, 404 page, routing |
-| 03 | [Authentication](tasks/task-03-auth.md) | todo | — | — |
+| 03 | [Authentication](tasks/task-03-auth.md) | done | 2026-07-13 | AuthContext, ProtectedRoute, login/register UI, navbar user menu, logout (stub auth) |
 | 04 | [API client & mock mode](tasks/task-04-api-client.md) | todo | — | — |
 | 05 | [Chat panel](tasks/task-05-chat-panel.md) | todo | — | — |
 | 06 | [Live resume preview](tasks/task-06-resume-preview.md) | todo | — | — |

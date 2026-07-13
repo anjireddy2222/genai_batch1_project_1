@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
-import { IconFileDescription, IconUserCircle } from '@tabler/icons-react'
+import { IconFileDescription } from '@tabler/icons-react'
 import ThemeToggle from './ThemeToggle.jsx'
+import UserMenu from './UserMenu.jsx'
 
 const navLinkClass = ({ isActive }) =>
   `rounded-control px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
@@ -46,13 +47,7 @@ export default function Navbar({ completeness = 0 }) {
 
           <ThemeToggle />
 
-          <button
-            type="button"
-            aria-label="User menu"
-            className="grid h-9 w-9 place-items-center rounded-full border border-border text-text-muted transition-colors hover:bg-surface-2 hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-          >
-            <IconUserCircle size={20} stroke={1.75} />
-          </button>
+          <UserMenu />
         </div>
       </div>
     </header>
