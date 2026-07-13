@@ -41,6 +41,12 @@ handling, skipping or re-ordering a task, any workaround for a backend limitatio
 - Alternatives considered: building a real minimal valid PDF now — deferred to avoid duplicating work Task 08 will redo anyway once it decides the generation strategy.
 - Review needed: no.
 
+## [2026-07-13] task-05 — Bullet-list convention in assistant chat replies
+- Context: CLAUDE.md's chat panel spec requires AI suggestion blocks (rewritten resume bullets) to render inside the message bubble as a left-border accent quote block, distinct from normal prose.
+- Decision: `mock.js`'s `exp_detail` stage reply embeds the generated bullets as lines prefixed with `• ` inside the assistant's reply text (e.g. `"I turned that into resume bullets for you:\n• ...\n• ...\n\nWant to add..."`). `MessageBubble.jsx` parses a message's text into alternating text/bullet segments by detecting `• `-prefixed lines and renders bullet segments as a left-border accent `<ul>`. This is a convention between `mock.js` and `MessageBubble.jsx`, not part of the documented API contract — added a note in `ui/docs/api-contract.md`'s reply field description would be worth doing if the real backend adopts the same convention.
+- Alternatives considered: a separate structured `suggestionBlock` field on the chat response — more explicit, but the CLAUDE.md contract in §6 doesn't define one and adding a field not in the assumed contract felt like a bigger deviation than a text convention the UI already has to parse for formatting anyway (line breaks, paragraphs).
+- Review needed: no — but flag to whoever implements the real backend chat endpoint so replies use the same `• ` convention for rewritten bullets, or the contract should be extended with an explicit field.
+
 ---
 
 ## Backend change requests

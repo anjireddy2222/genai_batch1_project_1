@@ -217,7 +217,7 @@ function applyTurn(state, text) {
       resume.experience = experience
       completeness = 65
       nextStage = 'post_experience'
-      reply = 'I turned that into resume bullets for you. Want to add another role, or should we move on to education?'
+      reply = `I turned that into resume bullets for you:\n${bullets.map((bullet) => `• ${bullet}`).join('\n')}\n\nWant to add another role, or should we move on to education?`
       suggestions = ['Add another role', 'Move to education']
       break
     }
