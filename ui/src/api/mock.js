@@ -355,17 +355,3 @@ export async function getConversation() {
     completeness: state.completeness,
   }
 }
-
-// ---------------------------------------------------------------------------
-// Resume file downloads (provisional placeholder — Task 08 owns real generation)
-// ---------------------------------------------------------------------------
-
-export async function downloadResume(_conversationId, format) {
-  await delay(300, 700)
-  const content =
-    format === 'pdf'
-      ? '%PDF-1.4\n% Mock placeholder file from ResumeChat mock mode.\n%%EOF'
-      : 'Mock placeholder DOCX content from ResumeChat mock mode.'
-  const type = format === 'pdf' ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-  return new Blob([content], { type })
-}

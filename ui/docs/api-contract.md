@@ -110,14 +110,15 @@ message to get the greeting.
 
 ---
 
-## `GET /api/resume/:id/pdf` and `GET /api/resume/:id/docx`
+## Resume file downloads — generated client-side, not a backend endpoint
 
-Binary file responses (`application/pdf`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`).
-Fetched with credentials, turned into a blob URL, downloaded client-side as
-`FirstName-LastName-Resume.pdf` / `.docx`.
-
-**Not confirmed implemented server-side** — see "Backend change requests" in `actions.md`. Task
-08 documents the client-side fallback used until these exist.
+`GET /api/resume/:id/pdf` and `/docx` were assumed in CLAUDE.md §6, but the backend has no
+route for either (see "Backend change requests" below) — there was nothing to call. As decided
+in Task 08 (see `actions.md`), the UI generates both files entirely client-side from the current
+`resume` state already held by `ResumeContext`, using `@react-pdf/renderer` (PDF) and `docx`
+(DOCX), styled to match `ResumePreview.jsx`. No network request is made for downloads in either
+mock or real-backend mode. If the backend later adds real generation endpoints, `DownloadButton.jsx`
+is the single place that would switch from local generation to a `fetch` + blob download.
 
 ---
 

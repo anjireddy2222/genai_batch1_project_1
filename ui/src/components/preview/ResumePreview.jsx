@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
-import { IconCircleCheck, IconDownload } from '@tabler/icons-react'
+import { IconCircleCheck } from '@tabler/icons-react'
 import { useResume } from '../../context/ResumeContext.jsx'
+import DownloadButton from './DownloadButton.jsx'
 
 const EMPTY_RESUME = {
   name: '',
@@ -42,24 +43,8 @@ function SectionHeading({ children }) {
   )
 }
 
-function DownloadButton({ format, label }) {
-  return (
-    <button
-      type="button"
-      disabled
-      title="Available when your resume is complete"
-      aria-label={`Download ${label}, available when your resume is complete`}
-      className="flex items-center gap-1.5 rounded-control border border-border px-2.5 py-1.5 text-xs font-medium text-text-muted opacity-60 disabled:cursor-not-allowed"
-      data-format={format}
-    >
-      <IconDownload size={14} stroke={1.75} />
-      {label}
-    </button>
-  )
-}
-
 export default function ResumePreview() {
-  const { resume, changedKeys, resumeVersion } = useResume()
+  const { resume, completeness, changedKeys, resumeVersion } = useResume()
   const data = resume || EMPTY_RESUME
   const hasExperience = data.experience?.length > 0
   const hasEducation = data.education?.length > 0
@@ -108,8 +93,8 @@ export default function ResumePreview() {
       <div className="flex shrink-0 items-center justify-between border-b border-border px-4 py-3 sm:px-6">
         <span className="text-sm font-medium text-text">Live preview</span>
         <div className="flex items-center gap-2">
-          <DownloadButton format="pdf" label="PDF" />
-          <DownloadButton format="docx" label="DOCX" />
+          <DownloadButton format="pdf" label="PDF" disabled={completeness < 100} resume={data} />
+          <DownloadButton format="docx" label="DOCX" disabled={completeness < 100} resume={data} />
         </div>
       </div>
 

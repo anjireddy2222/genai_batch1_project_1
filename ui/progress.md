@@ -12,7 +12,7 @@ Update status + date + summary as part of each task's commit. Work strictly top 
 | 05 | [Chat panel](tasks/task-05-chat-panel.md) | done | 2026-07-13 | ChatPanel, MessageBubble, TypingIndicator, ChatInput; verified live via Playwright |
 | 06 | [Live resume preview](tasks/task-06-resume-preview.md) | done | 2026-07-13 | ResumePreview document, skeleton states, ATS line; verified live at every interview stage |
 | 07 | [Chat ↔ resume integration](tasks/task-07-integration.md) | done | 2026-07-13 | ResumeContext, signature highlight animation, live completeness pill, session restore |
-| 08 | [PDF & DOCX downloads](tasks/task-08-downloads.md) | todo | — | — |
+| 08 | [PDF & DOCX downloads](tasks/task-08-downloads.md) | done | 2026-07-13 | Client-side PDF/DOCX generation, code-split, verified via real browser downloads |
 | 09 | [Responsive & mobile experience](tasks/task-09-responsive.md) | todo | — | — |
 | 10 | [Polish, accessibility & QA](tasks/task-10-polish-qa.md) | todo | — | — |
 | 11 | [README & portfolio presentation](tasks/task-11-readme.md) | todo | — | — |

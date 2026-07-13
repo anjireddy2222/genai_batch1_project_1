@@ -65,6 +65,18 @@ handling, skipping or re-ordering a task, any workaround for a backend limitatio
 - Alternatives considered: a `useState` map of `{ [sectionId]: timestamp }` cleared via `setTimeout` per section — works, but is strictly more bookkeeping (needs cleanup on unmount, per-timer tracking) for the same visual result the key-remount trick gets for free from React's own reconciliation.
 - Review needed: no.
 
+## [2026-07-13] task-08 — Client-side PDF/DOCX generation; new dependencies added
+- Context: Task 08's pre-work requires checking whether the backend exposes PDF/DOCX generation endpoints. It doesn't — same empty-backend finding as task-03/04 (`app.py` has no routes beyond `GET /`). Per the task's own branching instructions, the fallback is client-side generation using `@react-pdf/renderer` (PDF) and `docx` (DOCX).
+- Decision: added `@react-pdf/renderer` and `docx` as real `dependencies` in `package.json` — these are NOT in CLAUDE.md §4's approved list, but §4 itself says new dependencies are fine "with an actions.md entry explaining why," and Task 08's own instructions explicitly name these two packages for this exact fallback. Built `src/utils/ResumePdfDocument.jsx` (react-pdf `Document`/`Page`/`Text`/`View` tree styled to match `ResumePreview.jsx`: navy uppercase headings with a bottom rule, Times-Roman for the name as the closest PDF standard font to Georgia, Helvetica for body as the closest standard font to Arial — true Georgia/Arial aren't in the PDF standard 14 and embedding them was judged not worth the bundle-size/complexity cost for a mock-mode demo) and `src/utils/generateResumeDocx.js` (`docx` package, matching heading/color structure). `src/utils/resumeFilename.js` sanitizes the resume name into `FirstName-LastName-Resume.pdf`/`.docx`, stripping characters invalid on Windows/macOS (`\ / : * ? " < > |`).
+- Alternatives considered: waiting for real backend endpoints — rejected, backend is unimplemented and blocking isn't an option per CLAUDE.md §1 rule 4. Kept the door open for a future backend to just have `DownloadButton.jsx` swap to a `fetch`+blob call — noted in `api-contract.md`.
+- Review needed: yes — once the backend is implemented, evaluate whether server-side generation (more consistent fonts, works without shipping ~2 generation libraries to the client) should replace this.
+
+## [2026-07-13] task-08 — Removed the now-dead mock download placeholder from Task 04
+- Context: Task 04 added a provisional `downloadResume()` in `src/api/mock.js` and a thin `src/api/resume.js` wrapper, explicitly flagged in that task's actions.md entry as "Task 08 will replace this." Task 08's decision (client-side generation, above) means nothing calls the backend/mock for file bytes anymore — `resumeFilename`, `generateResumePdf`, and `generateResumeDocx` build the file directly from `ResumeContext`'s `resume` state.
+- Decision: deleted `src/api/resume.js` and the `downloadResume` export from `src/api/mock.js` (confirmed via grep that nothing else referenced them) rather than leaving dead code that pretends to call an endpoint the app no longer uses.
+- Alternatives considered: leaving them in place for a hypothetical future backend switch-over — rejected per "no unused code" / no speculative code for scenarios that can't happen yet; `api-contract.md` already documents where a future backend integration would plug in.
+- Review needed: no.
+
 ---
 
 ## Backend change requests
