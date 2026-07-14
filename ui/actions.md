@@ -95,6 +95,46 @@ handling, skipping or re-ordering a task, any workaround for a backend limitatio
 - Alternatives considered: re-implementing from scratch to be safe — rejected as pure waste; the existing diff was read in full and independently verified against every line of the task's acceptance criteria rather than trusted blindly.
 - Review needed: no.
 
+## [2026-07-14] task-10 — Contrast audit results (WCAG AA, both themes)
+- Context: task's acceptance criteria require every text/background token pair to be checked against WCAG AA (4.5:1 body, 3:1 large/graphical) in both themes, with results logged here.
+- Method: computed relative luminance (sRGB → linear, ITU-R BT.709 weights) and contrast ratio for every `--text`/`--text-muted`/`--danger`/`--success` value against every `--bg`/`--surface`/`--surface-2` value actually used as that pairing in the codebase (grepped `text-danger`/`text-success`/`text-primary`/`text-accent` usage sites first, then computed ratios only for pairs that occur in real components).
+- Results (light theme):
+  - `--text` #1F2328 vs `--bg`/`--surface`/`--surface-2`: 14.65:1 / 15.83:1 / 13.54:1 — pass.
+  - `--text-muted` #5C6570 vs same three: 5.47:1 / 5.92:1 / 5.06:1 — pass.
+  - `--danger` #C0392B (used as small text — form errors, logout, chat error banner) vs `--bg`/`--surface`/`--surface-2`: 5.03:1 / 5.44:1 / 4.65:1 — pass, narrowest margin on `--surface-2`.
+  - `--success` #3B8C40 (used as `DownloadButton`'s "Done" label, real text) vs `--surface` (white): **4.19:1 — fails 4.5:1 AA.** Fixed by darkening to `#2C7530` (new ratios: 5.69:1 / 5.26:1 vs `--surface`/`--bg`, 4.86:1 vs `--surface-2`) — see fix below.
+- Results (dark theme):
+  - `--text` #E4E7EB vs `--bg`/`--surface`/`--surface-2`: 14.63:1 / 12.89:1 / 13.95:1 — pass.
+  - `--text-muted` #9AA4B2 vs same three: 7.19:1 / 6.34:1 / 6.86:1 — pass.
+  - `--danger` #E57368 vs same three: 6.04:1 / 5.32:1 / 5.75:1 — pass.
+  - `--success` #4CAF6E vs same three: 6.62:1 / 5.84:1 / 6.31:1 — pass, no change needed.
+- Graphical/icon-only uses of `--accent`/`--primary` as a background under `--primary-contrast` (avatar badges, icon circles) were checked against the 3:1 non-text threshold, not 4.5:1, since they're decorative glyphs, not text — all pass (worst case light `--accent` bg vs white icon glyph: 3.37:1).
+- Review needed: no — light `--success` fix applied and reverified.
+
+## [2026-07-14] task-10 — Darkened light-theme `--success` token from #3B8C40 to #2C7530
+- Context: contrast audit above found the only real failure — `DownloadButton.jsx`'s `text-xs` "Done" success label only reached 4.19:1 against `--surface` (white), below the 4.5:1 AA floor for normal-size text.
+- Decision: darkened `--success` in `:root` (light theme only — dark theme's `--success` already passed) to `#2C7530`, verified via the same luminance formula to clear 4.5:1 against `--bg`, `--surface`, and `--surface-2` with margin (4.86:1 worst case). Still reads clearly as a "success green," just a richer shade. Dark theme's `--success` (#4CAF6E) was left unchanged — it already passed everywhere it's used.
+- Alternatives considered: adding a separate `--success-text` token distinct from the icon-fill `--success` — rejected as unnecessary complexity; one token that passes AA everywhere it's actually used is simpler than two tokens to track.
+- Review needed: no.
+
+## [2026-07-14] task-10 — Session-expired screen built on top of already-scaffolded AuthContext state
+- Context: `AuthContext.jsx` already exposed `sessionExpired`/`clearSessionExpired` (set when `client.js`'s `apiRequest` sees a real `401`), but nothing consumed them — a mid-session 401 just silently cleared `user` and `ProtectedRoute` redirected straight to `/login` with no explanation, and the task requires "nice 401 handling ... preserving no data loss messaging."
+- Decision: `ProtectedRoute.jsx` now branches on `sessionExpired` before falling back to the plain `<Navigate>` redirect, showing a card with a warning icon, "Session expired" heading, reassuring copy ("Nothing is lost — your resume and conversation are saved..." — true, since mock conversation state persists in `sessionStorage` per the task-04 decision above), and a "Sign in again" button that clears the flag and navigates to `/login`.
+- Verification caveat: in mock mode, `unauthorizedHandler` is only ever invoked from `client.js`'s `apiRequest` (real `fetch` 401 responses) — mock mode's `src/api/mock.js` functions are called directly and never go through `apiRequest`, so this screen is currently unreachable via normal mock-mode usage (the only 401s mock.js throws are on `login`/`getSession`, handled separately by `AuthContext`'s initial-mount `.catch`, not this path). Verified correctness by temporarily exposing a one-line debug trigger (`window.__TEMP_TRIGGER_401`) in `client.js`, driving it live with Playwright to confirm the screen renders correctly and "Sign in again" clears state and returns to `/login`, then fully reverting the debug line before committing (confirmed via `git diff` showing zero changes to `client.js`). This path will become naturally reachable once a real backend returns actual 401s.
+- Alternatives considered: building a mock-mode-only simulated expiry (e.g., auto-expire after N minutes) — rejected as speculative behavior not asked for by the task and not representative of the real backend's expiry semantics.
+- Review needed: yes — once the real backend exists, do a live (non-simulated) pass confirming a genuine session expiry mid-chat triggers this screen end to end.
+
+## [2026-07-14] task-10 — Logged, not fixed: two intentional hardcoded-color exceptions
+- Context: task-10's consistency-pass scope says components should use `var(--*)` tokens, never hardcoded hex, but two spots intentionally deviate.
+- Decision: left both as-is. (1) `LoginPage.jsx`'s "Continue with Google" button uses `bg-white`/`text-gray-800`/`hover:bg-gray-50` regardless of theme — this isn't drift, it's Google's Sign-In branding guidelines, which mandate a fixed white button regardless of host app theme. (2) `ResumePreview.jsx`'s near-black `#111111`/`#3a3a3a` text and `bg-white` container are required by CLAUDE.md §5 itself ("resume preview page is ALWAYS white with dark text, in both modes ... near-black #111 ... navy headings"), so the resume document intentionally does not participate in the `--*` token system.
+- Review needed: no.
+
+## [2026-07-14] task-10 — OG image is an SVG placeholder, not a raster PNG
+- Context: task asks for "a simple OG image or solid-color branded placeholder." No image-generation tooling/dependency is approved or available in this environment.
+- Decision: hand-built `ui/public/og-image.svg` (1200×630, navy `--primary` background, favicon-style icon mark, "ResumeChat" wordmark) referenced via `og:image`/`twitter:image` in `index.html`. Some older social-card scrapers (notably Facebook's) don't render SVG `og:image`s reliably — this is a known limitation, not an oversight.
+- Alternatives considered: skipping OG image entirely — rejected, task explicitly asks for one and a branded placeholder is better than nothing for the platforms that do support SVG (Slack, Discord, LinkedIn, X/Twitter with `summary_large_image`).
+- Review needed: yes — swap for a real PNG/JPG export of this SVG (or a designed asset) once the app has a production domain, for maximum social-scraper compatibility.
+
 ---
 
 ## Backend change requests

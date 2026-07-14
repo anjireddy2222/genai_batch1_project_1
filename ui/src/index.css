@@ -9,7 +9,7 @@
   --primary: #1E3A5F;
   --primary-contrast: #FFFFFF;
   --accent: #2D9C8A;
-  --success: #3B8C40;
+  --success: #2C7530;
   --danger: #C0392B;
   --text: #1F2328;
   --text-muted: #5C6570;
@@ -46,7 +46,15 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 15px;
   line-height: 1.6;
-  transition: background-color 150ms ease, color 150ms ease;
+}
+
+/* Theme toggle should crossfade every surface, not just the page body. */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  transition-duration: 150ms;
+  transition-timing-function: ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -100,4 +108,36 @@ h4 {
   border-radius: 9999px;
   background-color: var(--text-muted);
   animation: typing-bounce 1.2s infinite ease-in-out;
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dropdown-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+}
+
+.dropdown-in {
+  transform-origin: top right;
+  animation: dropdown-in 150ms ease-out both;
+}
+
+.dropdown-out {
+  transform-origin: top right;
+  animation: dropdown-out 150ms ease-in both;
 }

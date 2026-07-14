@@ -103,7 +103,7 @@ export default function ResumePreview() {
           className="mx-auto max-w-[680px] rounded-card border border-border bg-white px-5 py-6 text-[#111111] shadow-sm sm:px-10 sm:py-9"
           style={{ fontFamily: 'Arial, Helvetica, sans-serif', fontSize: '10.5px', lineHeight: 1.55 }}
         >
-          <header key={sectionKey('header')} {...sectionRest('header', 'text-center')}>
+          <div key={sectionKey('header')} {...sectionRest('header', 'text-center')}>
             {data.name ? (
               <h1 style={{ fontFamily: 'Georgia, serif' }} className="text-[18px] font-normal leading-tight text-[#111111]">
                 {data.name}
@@ -115,7 +115,7 @@ export default function ResumePreview() {
             )}
             <ContactLine contact={data.contact} />
             {data.targetRole && <p className="mt-0.5 italic text-[#3a3a3a]">{data.targetRole}</p>}
-          </header>
+          </div>
 
           <section key={sectionKey('summary')} {...sectionRest('summary')}>
             <SectionHeading>Summary</SectionHeading>

@@ -14,8 +14,20 @@ function getInitials(name) {
 export default function UserMenu() {
   const { user, logout } = useAuth()
   const [open, setOpen] = useState(false)
+  const [rendered, setRendered] = useState(false)
   const containerRef = useRef(null)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (open) {
+      setRendered(true)
+      return undefined
+    }
+    if (!rendered) return undefined
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const timeout = window.setTimeout(() => setRendered(false), reduceMotion ? 0 : 150)
+    return () => window.clearTimeout(timeout)
+  }, [open, rendered])
 
   useEffect(() => {
     if (!open) return undefined
@@ -61,11 +73,13 @@ export default function UserMenu() {
         <IconChevronDown size={14} stroke={1.75} className="text-text-muted" />
       </button>
 
-      {open && (
+      {rendered && (
         <div
           role="menu"
           aria-label="Account"
-          className="absolute right-0 z-20 mt-2 w-56 rounded-card border border-border bg-surface p-1 shadow-lg"
+          className={`absolute right-0 z-20 mt-2 w-56 rounded-card border border-border bg-surface p-1 shadow-lg ${
+            open ? 'dropdown-in' : 'dropdown-out'
+          }`}
         >
           <div className="px-3 py-2">
             <p className="truncate text-sm font-medium text-text">{user.name}</p>
@@ -76,7 +90,7 @@ export default function UserMenu() {
             type="button"
             role="menuitem"
             onClick={() => setOpen(false)}
-            className="block w-full rounded-control px-3 py-2 text-left text-sm text-text transition-colors hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="block w-full rounded-control px-3 py-2 text-left text-sm text-text transition-colors hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-[0.98]"
           >
             Profile
           </button>
@@ -84,7 +98,7 @@ export default function UserMenu() {
             type="button"
             role="menuitem"
             onClick={handleLogout}
-            className="block w-full rounded-control px-3 py-2 text-left text-sm text-danger transition-colors hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="block w-full rounded-control px-3 py-2 text-left text-sm text-danger transition-colors hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-[0.98]"
           >
             Log out
           </button>

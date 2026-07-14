@@ -14,7 +14,7 @@ Update status + date + summary as part of each task's commit. Work strictly top 
 | 07 | [Chat ↔ resume integration](tasks/task-07-integration.md) | done | 2026-07-13 | ResumeContext, signature highlight animation, live completeness pill, session restore |
 | 08 | [PDF & DOCX downloads](tasks/task-08-downloads.md) | done | 2026-07-13 | Client-side PDF/DOCX generation, code-split, verified via real browser downloads |
 | 09 | [Responsive & mobile experience](tasks/task-09-responsive.md) | done | 2026-07-14 | Custom 900px split/tab breakpoint, mobile tab bar with dirty dot, MobileMenu (nav+theme), 100dvh layouts, 44px touch targets, fluid preview scaling, stacking footer; verified 375–1536px in both themes via Playwright, zero overflow/console errors |
-| 10 | [Polish, accessibility & QA](tasks/task-10-polish-qa.md) | todo | — | — |
+| 10 | [Polish, accessibility & QA](tasks/task-10-polish-qa.md) | done | 2026-07-14 | Fixed light-theme success contrast, session-expired screen, OG tags+image, code-split login, animated dropdowns + press states, global theme crossfade, nested-header fix; full contrast audit + live QA sweep documented in actions.md |
 | 11 | [README & portfolio presentation](tasks/task-11-readme.md) | todo | — | — |
 
 ## Blocked items
