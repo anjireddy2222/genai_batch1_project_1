@@ -77,6 +77,24 @@ handling, skipping or re-ordering a task, any workaround for a backend limitatio
 - Alternatives considered: leaving them in place for a hypothetical future backend switch-over — rejected per "no unused code" / no speculative code for scenarios that can't happen yet; `api-contract.md` already documents where a future backend integration would plug in.
 - Review needed: no.
 
+## [2026-07-14] task-09 — Custom `tab` (900px) Tailwind breakpoint instead of a default one
+- Context: the split-screen-vs-tab-bar threshold specified in the task (below 900px collapses to tabs) doesn't line up with any of Tailwind's default breakpoints (768/1024). Using `md`/`lg` directly would either collapse too early or too late relative to the spec.
+- Decision: added a custom `tab: '900px'` screen in `tailwind.config.js` and used `tab:` variants throughout (`Navbar`, `MobileMenu`, `BuilderPage`, `MessageBubble`) so the split/tab-bar and nav-links/hamburger transitions all happen at exactly 900px, matching the task's stated breakpoint rather than approximating it with a stock one.
+- Alternatives considered: `lg` (1024px) — rejected, collapses later than specified and would leave the split screen visibly cramped between 900–1024px on the laptop breakpoint the task calls out separately.
+- Review needed: no.
+
+## [2026-07-14] task-09 — Preview scaling done via fluid sizing, not a CSS `transform: scale` wrapper
+- Context: task scope offers two options for the mobile preview ("CSS `transform: scale` wrapper or fluid sizing") so the resume still reads as a document at narrow widths.
+- Decision: went with fluid sizing — the document card's horizontal padding shrinks (`px-5` → `sm:px-10`) and it stays `max-w-[680px]` with `mx-auto`, while the resume's font sizes stay fixed (10.5px body per CLAUDE.md §5) so the document doesn't get illegibly tiny the way a scaled-down transform would at 375px. Verified via Playwright screenshots at 375/390/768/1024/1280/1536 — reads clearly as a document at every width with zero horizontal overflow.
+- Alternatives considered: `transform: scale()` wrapper — would shrink text along with layout, making body copy hard to read on small phones; rejected in favor of fluid sizing which the task explicitly allows as an alternative.
+- Review needed: no.
+
+## [2026-07-14] task-09 — Picked up and completed pre-existing uncommitted work from an interrupted session
+- Context: on starting task-09, the working tree already contained a near-complete implementation (MobileMenu.jsx, tab-bar BuilderPage, mobile Navbar, 100dvh layouts, 44px touch targets, stacking Footer, and a `ui/smoke.mjs` Playwright verification script) that matched the task's scope but had never been committed — the task-09 workflow (verify → progress.md → actions.md → commit → push) had not been closed out.
+- Decision: reviewed every changed file against the task's acceptance criteria, ran `npm run build` (passes), and re-ran the Playwright smoke script (adapted to this session's scratchpad path) live against the dev server to confirm no horizontal overflow at any of the six required widths, working tab-switch with dirty-dot indicator, chat state preserved across tabs, and correct rendering in both themes (dark mode spot-checked separately at 375px) before treating the task as verified. Deleted `ui/smoke.mjs` and the ad hoc dark-mode script afterward since Playwright isn't an approved/listed dependency and one-off verification scripts with hardcoded session-specific temp paths aren't shipped app code.
+- Alternatives considered: re-implementing from scratch to be safe — rejected as pure waste; the existing diff was read in full and independently verified against every line of the task's acceptance criteria rather than trusted blindly.
+- Review needed: no.
+
 ---
 
 ## Backend change requests

@@ -51,7 +51,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-bg px-4 py-10">
+    <div className="flex min-h-[100dvh] items-center justify-center bg-bg px-4 py-10">
       <div className="w-full max-w-sm rounded-card border border-border bg-surface p-8 shadow-sm">
         <div className="mb-6 flex flex-col items-center text-center">
           <span className="grid h-10 w-10 place-items-center rounded-control bg-primary text-primary-contrast">

@@ -4,6 +4,9 @@ export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
+      screens: {
+        tab: '900px',
+      },
       colors: {
         bg: 'var(--bg)',
         surface: 'var(--surface)',

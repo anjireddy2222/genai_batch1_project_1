@@ -8,7 +8,7 @@ export default function ProtectedRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="grid min-h-screen place-items-center bg-bg" aria-busy="true" aria-label="Checking session">
+      <div className="grid min-h-[100dvh] place-items-center bg-bg" aria-busy="true" aria-label="Checking session">
         <IconLoader2 size={24} className="animate-spin text-text-muted" />
       </div>
     )

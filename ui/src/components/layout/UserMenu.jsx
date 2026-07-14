@@ -53,9 +53,9 @@ export default function UserMenu() {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={`Account menu for ${user.name}`}
-        className="flex items-center gap-1.5 rounded-full border border-border py-1 pl-1 pr-2 transition-colors hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-[0.98]"
+        className="flex min-h-[44px] items-center gap-1.5 rounded-full border border-border py-1 pl-1 pr-2 transition-colors hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-[0.98]"
       >
-        <span className="grid h-7 w-7 place-items-center rounded-full bg-accent text-xs font-semibold text-primary-contrast">
+        <span className="grid h-8 w-8 place-items-center rounded-full bg-accent text-xs font-semibold text-primary-contrast">
           {getInitials(user.name)}
         </span>
         <IconChevronDown size={14} stroke={1.75} className="text-text-muted" />

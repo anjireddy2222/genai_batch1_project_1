@@ -38,7 +38,7 @@ export default function DownloadButton({ format, label, disabled, resume }) {
         disabled={disabled || isBusy}
         title={disabled ? 'Finish the interview to download' : `Download ${label}`}
         aria-label={disabled ? `Download ${label}, available when your resume is complete` : `Download ${label}`}
-        className={`flex items-center gap-1.5 rounded-control border px-2.5 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-[0.98] ${
+        className={`flex min-h-[36px] items-center gap-1.5 rounded-control border px-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-[0.98] ${
           disabled
             ? 'cursor-not-allowed border-border text-text-muted opacity-60'
             : status === 'success'

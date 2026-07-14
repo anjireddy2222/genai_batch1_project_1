@@ -98,9 +98,9 @@ export default function ResumePreview() {
         </div>
       </div>
 
-      <div onScroll={handlePreviewScroll} className="min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+      <div onScroll={handlePreviewScroll} className="min-h-0 flex-1 overflow-y-auto px-3 py-4 sm:px-6 sm:py-6">
         <div
-          className="mx-auto max-w-[680px] rounded-card border border-border bg-white px-10 py-9 text-[#111111] shadow-sm"
+          className="mx-auto max-w-[680px] rounded-card border border-border bg-white px-5 py-6 text-[#111111] shadow-sm sm:px-10 sm:py-9"
           style={{ fontFamily: 'Arial, Helvetica, sans-serif', fontSize: '10.5px', lineHeight: 1.55 }}
         >
           <header key={sectionKey('header')} {...sectionRest('header', 'text-center')}>

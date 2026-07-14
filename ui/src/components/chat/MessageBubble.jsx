@@ -21,7 +21,7 @@ export default function MessageBubble({ message, isLatest, onSuggestionClick, on
 
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
-      <div className={`flex max-w-[85%] gap-2 ${isUser ? 'flex-row-reverse' : ''}`}>
+      <div className={`flex max-w-[88%] gap-2 tab:max-w-[85%] ${isUser ? 'flex-row-reverse' : ''}`}>
         {!isUser && (
           <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-accent text-primary-contrast">
             <IconSparkles size={14} stroke={1.75} />
@@ -70,7 +70,7 @@ export default function MessageBubble({ message, isLatest, onSuggestionClick, on
                   key={suggestion}
                   type="button"
                   onClick={() => onSuggestionClick(suggestion)}
-                  className="rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-medium text-text transition-colors hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-[0.98]"
+                  className="min-h-[36px] rounded-full border border-border bg-surface px-3 text-xs font-medium text-text transition-colors hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-[0.98]"
                 >
                   {suggestion}
                 </button>

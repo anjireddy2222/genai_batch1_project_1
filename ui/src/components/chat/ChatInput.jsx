@@ -46,14 +46,14 @@ export default function ChatInput({ onSend, disabled }) {
           placeholder="Type your answer…"
           aria-label="Message"
           disabled={disabled}
-          className="max-h-[130px] flex-1 resize-none rounded-control border border-border bg-bg px-3 py-2 text-sm text-text placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-60"
+          className="max-h-[130px] min-h-[44px] flex-1 resize-none rounded-control border border-border bg-bg px-3 py-2.5 text-sm text-text placeholder:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-60"
         />
         <button
           type="button"
           onClick={submit}
           disabled={disabled || !value.trim()}
           aria-label="Send message"
-          className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primary text-primary-contrast transition-transform hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-primary text-primary-contrast transition-transform hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
         >
           <IconArrowUp size={18} stroke={2} />
         </button>
