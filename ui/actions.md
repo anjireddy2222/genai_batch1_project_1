@@ -135,6 +135,36 @@ handling, skipping or re-ordering a task, any workaround for a backend limitatio
 - Alternatives considered: skipping OG image entirely — rejected, task explicitly asks for one and a branded placeholder is better than nothing for the platforms that do support SVG (Slack, Discord, LinkedIn, X/Twitter with `summary_large_image`).
 - Review needed: yes — swap for a real PNG/JPG export of this SVG (or a designed asset) once the app has a production domain, for maximum social-scraper compatibility.
 
+## [2026-07-14] task-11 — Closing summary: what a human reviewer should look at first
+
+All 11 tasks are complete. Every entry above has a Context/Decision/Alternatives/Review-needed
+breakdown; the ones flagged `Review needed: yes` are the substantive judgment calls, not busywork —
+here's the priority order for a first pass:
+
+1. **The backend is unimplemented** (task-03, task-04, task-08, and "Backend change requests"
+   below). This is the single biggest thing: the entire UI — auth, chat, file downloads — was
+   built and verified against `src/api/mock.js`, not a real API. `docs/api-contract.md` documents
+   the *assumed* contract; someone needs to implement the backend routes and then verify/correct
+   that document against what actually gets built, especially the auth mechanism (cookie session
+   was a guess, not a discovered fact — task-03) and whether PDF/DOCX generation should move
+   server-side eventually (task-08).
+2. **Session-expired screen is logic-verified but not live-verified** (task-10) — mock mode has no
+   code path that produces a genuine mid-session 401, so this was confirmed correct via a
+   temporary debug hook (fully reverted, confirmed via `git diff`) rather than organic use. Worth
+   a real pass once the backend exists.
+3. **Register/account creation is a stub** (task-03) — toggles a local form mode, reuses the login
+   mock function, and accepts any credentials. Needs a real decision on whether registration is
+   even in scope for this product.
+4. **Two intentional hardcoded-color exceptions** (task-10) — the Google sign-in button and the
+   resume preview document. Both are deliberate (external brand guideline / explicit CLAUDE.md
+   requirement respectively), not drift, but worth a quick sanity check.
+5. **OG image is a hand-built SVG, not a raster export** (task-10) — works on most modern social
+   scrapers but not universally; swap for a PNG once there's a production domain to design against.
+
+Nothing else in this log needs review before merge — the rest are self-contained implementation
+choices (mock storage strategy, code-splitting, breakpoint values, etc.) that don't depend on
+information only a human has.
+
 ---
 
 ## Backend change requests
