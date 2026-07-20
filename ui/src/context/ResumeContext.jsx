@@ -74,7 +74,7 @@ export function ResumeProvider({ children }) {
     setRestoring(true)
     setError(null)
     try {
-      const res = await sendMessage(null, '')
+      const res = await sendMessage(1, '')
       setConversationId(res.conversationId)
       setMessages([{ id: nextId(), role: 'assistant', text: res.reply, suggestions: res.suggestions }])
       lastTurnRef.current = res.turnId || 0

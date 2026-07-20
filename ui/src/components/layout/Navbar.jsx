@@ -1,7 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { IconFileDescription } from '@tabler/icons-react'
 import ThemeToggle from './ThemeToggle.jsx'
-import UserMenu from './UserMenu.jsx'
 import MobileMenu from './MobileMenu.jsx'
 import { useResume } from '../../context/ResumeContext.jsx'
 
@@ -62,8 +61,6 @@ export default function Navbar() {
           <div className="hidden tab:block">
             <ThemeToggle />
           </div>
-
-          <UserMenu />
 
           <MobileMenu />
         </div>

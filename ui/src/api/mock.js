@@ -1,10 +1,8 @@
 // Full in-memory mock of the backend contract in ui/docs/api-contract.md.
 // Used whenever VITE_USE_MOCKS=true so the UI is testable without the backend.
-// Auth state lives in localStorage (survives refresh, like a real cookie session would).
 // Conversation/resume state lives in sessionStorage so Task 07's "session restore on load"
 // is genuinely exercisable, but clears when the tab closes (a mock, not a real backend).
 
-const SESSION_KEY = 'resumechat_mock_session'
 const CONVERSATION_KEY = 'resumechat_mock_conversation'
 
 function delay(min = 400, max = 900) {
@@ -24,44 +22,6 @@ function readJSON(storage, key) {
 function writeJSON(storage, key, value) {
   if (value === null || value === undefined) storage.removeItem(key)
   else storage.setItem(key, JSON.stringify(value))
-}
-
-// ---------------------------------------------------------------------------
-// Auth
-// ---------------------------------------------------------------------------
-
-export async function login(email, password) {
-  await delay()
-  if (!email || !password) {
-    const error = new Error('Invalid email or password')
-    error.status = 401
-    throw error
-  }
-  const namePart = email.split('@')[0].replace(/[._]/g, ' ')
-  const user = {
-    id: 'u_1',
-    name: namePart.replace(/\b\w/g, (c) => c.toUpperCase()),
-    email,
-  }
-  writeJSON(localStorage, SESSION_KEY, user)
-  return { user }
-}
-
-export async function logout() {
-  await delay(150, 300)
-  writeJSON(localStorage, SESSION_KEY, null)
-  writeJSON(sessionStorage, CONVERSATION_KEY, null)
-}
-
-export async function getSession() {
-  await delay(200, 400)
-  const user = readJSON(localStorage, SESSION_KEY)
-  if (!user) {
-    const error = new Error('Not authenticated')
-    error.status = 401
-    throw error
-  }
-  return { user }
 }
 
 // ---------------------------------------------------------------------------
