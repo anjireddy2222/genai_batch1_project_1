@@ -53,6 +53,7 @@ export function ResumeProvider({ children }) {
   const [pending, setPending] = useState(false)
   const [restoring, setRestoring] = useState(true)
   const [error, setError] = useState(null)
+  const [data, setData] = useState({})
 
   const lastTurnRef = useRef(0)
   const resumeRef = useRef(null)
@@ -74,7 +75,8 @@ export function ResumeProvider({ children }) {
     setRestoring(true)
     setError(null)
     try {
-      const res = await sendMessage(1, '')
+      const res = await sendMessage(1, '', {...data})
+      setData({...res.profile_data})
       setConversationId(res.conversationId)
       setMessages([{ id: nextId(), role: 'assistant', text: res.reply, suggestions: res.suggestions }])
       lastTurnRef.current = res.turnId || 0
@@ -124,8 +126,9 @@ export function ResumeProvider({ children }) {
     setPending(true)
 
     try {
-      const res = await sendMessage(conversationId, text)
+      const res = await sendMessage(conversationId, text, {...data})
       setConversationId(res.conversationId)
+      setData({...res.profile_data})
       setMessages((prev) => [
         ...prev,
         { id: nextId(), role: 'assistant', text: res.reply, suggestions: res.suggestions, turnId: res.turnId },

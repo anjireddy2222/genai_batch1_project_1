@@ -11,11 +11,13 @@ Respond in exactly two parts:
 1. Your conversational reply (natural, warm, concise — 1-4 sentences plus one question).
 2. A state block:
 
-<state>
-{ ...full updated JSON state... }
-</state>
-
 The <state> block is hidden from the user. Always output the COMPLETE current state, not a diff.
+
+always return output is JSON format and dont put it inside quotes or blocks
+{
+  "ai_reply": "Your conversational reply here",
+  "state": { ...full updated JSON state... }
+}
 
 # INTERNAL DATA SCHEMA
 {
